@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense List</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f2f4f8;
+      }
+
+      .container {
+        width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: gray;
+        margin-bottom: 15px;
+      }
+
+      .box {
+        background: white;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .box h3 {
+        margin-top: 0;
+      }
+
+      input {
+        width: 100%;
+        height: 35px;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        font-size: 16px;
+      }
+
+      button {
+        width: 100%;
+        height: 40px;
+        background: #1e73e8;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .error {
+        color: red;
+        font-size: 14px;
+        display: none;
+        margin-bottom: 10px;
+      }
+
+      .total {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .expense-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .expense-item:last-child {
+        border-bottom: none;
+      }
+
+      .delete {
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div>
+        <h1>Expense List</h1>
+        <div class="subtitle">Add what you spent</div>
+      </div>
+
+      <!-- Add Expense -->
+      <div class="box">
+        <h3>Add Expense</h3>
+        <hr />
+
+        <label>Name:</label>
+        <input id="nameInput" type="text" />
+
+        <label>Amount:</label>
+        <input id="amountInput" type="number" />
+
+        <div id="error" class="error">Please fill out all fields</div>
+
+        <button id="addBtn">Add</button>
+      </div>
+
+      <!-- Total -->
+      <div id="total" class="total">Total: 0 ₸</div>
+
+      <!-- Expenses -->
+      <div class="box">
+        <h3>Expenses</h3>
+        <hr />
+        <div id="expenses"></div>
+      </div>
+    </div>
+
+    <script>
+      const nameInput = document.getElementById("nameInput");
+      const amountInput = document.getElementById("amountInput");
+      const addBtn = document.getElementById("addBtn");
+      const expensesDiv = document.getElementById("expenses");
+      const totalDiv = document.getElementById("total");
+      const error = document.getElementById("error");
+
+      let total = 0;
+
+      addBtn.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        const amount = amountInput.value.trim();
+
+        if (name === "" || amount === "") {
+          error.style.display = "block";
+          return;
+        }
+
+        error.style.display = "none";
+
+        total += Number(amount);
+        totalDiv.textContent = `Total: ${total} ₸`;
+
+        const item = document.createElement("div");
+        item.className = "expense-item";
+
+        item.innerHTML = `
+          <span>${name}</span>
+          <span>${amount} ₸</span>
+          <button class="delete">✖</button>
+        `;
+
+        item.querySelector(".delete").addEventListener("click", () => {
+          total -= Number(amount);
+          totalDiv.textContent = `Total: ${total} ₸`;
+          item.remove();
+        });
+
+        expensesDiv.appendChild(item);
+
+        nameInput.value = "";
+        amountInput.value = "";
+      });
+    </script>
+  </body>
+</html>
